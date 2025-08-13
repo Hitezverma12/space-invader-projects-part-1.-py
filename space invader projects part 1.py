@@ -72,6 +72,65 @@ def fire_bullet(x, y):
     bullet_state = "fire"
     screen.blit(bullentImg, (x + 16, y + 10))
 def is_collision(enemyx, enemyy, bulletx, bullety):
-    distance = 
+    distance = math.sqrt((enemyx - bulletx)) ** 2 + ((enemyy- bullety) ** 2)
+    return distance < collisision_radius
+
+running = True
+while running:
+    screen.fill((0, 0, 0))
+    screen.blit(backround, (0, 0))
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                playerx_change = -5
+            if event.key == pygame.K_RIGHT:
+                playerx_change = 5
+            if event.key == pygame.K_SPACE:
+                if bullet_state == "ready":
+                    bulletx = playerx
+                    fire_bullet(bulletx, bullety)
+        if event.type == pygame.KEYUP and event.key in (pygame.K_LEFT, pygame.K_RIGHT):
+            playerx_change = 0
+    playerx += playerx_change
+    playerx = max(0, min(playerx, screen_width - 64))
+
+    for i in range(num_of_enemies):
+        if enemyy[i] > 440:
+            for j in range(num_of_enemies):
+                enemyy[j] = 2000
+            game_over_text()
+            break
+
+
+        enemyx[i] += enemyx_change[i]
+        if enemyx[i] <= 0 or enemyx[i] >= screen_width - 64:
+
+            enemyx[i] *= -1
+            enemyx_change[i] += enemyy_change[i]
+            enemyy[i] += enemyy_change[i]
+
+        if iscollision(enemyx[i], enemyy[i], bulletx, bullety)
+    
+            bullety = player_start_y
+            bullet_state = "ready"
+            score_value += 1
+            enemyx[i] = random.randint(0, screen_width - 64)
+            enemyy[i] = random.randint(enemy_start_y_min, enemy_start_y_min)
+
+
+        enemy(enemyx[i], enemyy[i], i)
+
+        if bullety <= 0:
+            bullety = player_start_y
+            bullet_state = "ready"
+        if bullet_state == "fire":
+            fire_bullet(bulletx, bullety)
+            bullety -= bullety_change
+player(playerx, playery)
+show_score(textX, textY)
+pygame.display.update()
 
     
